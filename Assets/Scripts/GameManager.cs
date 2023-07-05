@@ -10,12 +10,14 @@ public class GameManager : MonoBehaviour
     private AudioClip _micClip;
     public int sampleWindow;
     public Microphone mic;
-    public float threshold = 0.1f;
     public int sensibility = 100;
 
     public Image micIntensityFill;
+    public GameObject micOnImage, micOffImage;
 
     public float currentMicrophoneIntensity;
+
+    public bool micActivated;
 
     public void Awake()
     {
@@ -28,21 +30,34 @@ public class GameManager : MonoBehaviour
         MicrophoneToAudioClip();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space)) 
+        {
+            micActivated ^= true;
+            micOnImage.SetActive(micActivated);
+            micOffImage.SetActive(!micActivated);
+        }
+    }
+
     private void FixedUpdate()
     {
         currentMicrophoneIntensity = GetMicrophoneVolume();
         if (micIntensityFill.fillAmount <= 0.05f) { micIntensityFill.fillAmount = currentMicrophoneIntensity; }
-        else { micIntensityFill.fillAmount = Mathf.Lerp(currentMicrophoneIntensity, micIntensityFill.fillAmount, 0.9f); }
+        else { micIntensityFill.fillAmount = Mathf.Lerp(currentMicrophoneIntensity, micIntensityFill.fillAmount, 0.95f); }
     }
 
     public void MicrophoneToAudioClip()
     {
         string micName = Microphone.devices[0];
         _micClip = Microphone.Start(micName, true, 20, AudioSettings.outputSampleRate);
+        micActivated = true;
+        micOffImage.SetActive(false);
     }
 
     public float GetMicrophoneVolume()
     {
+        if (!micActivated) { return 0; }
         return GetAudioIntensity(Microphone.GetPosition(Microphone.devices[0]), _micClip);
     }
 
@@ -60,7 +75,6 @@ public class GameManager : MonoBehaviour
             meanVol += Mathf.Abs(waveData[i]);
         }
         float intensity = (meanVol + maxVol) / 2f / sampleWindow * sensibility;
-        if (intensity <= threshold) { return 0; }
-        else { return intensity; }
+        return intensity;
     }
 }
