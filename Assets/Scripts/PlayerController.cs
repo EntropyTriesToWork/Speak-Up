@@ -72,6 +72,6 @@ public class PlayerController : MonoBehaviour
     void ChargeJump(float micVol)
     {
         _jumpHeightMultiplier += Time.fixedDeltaTime;
-        _jumpDistanceMultiplier = micVol;
+        if(_jumpDistanceMultiplier < micVol) _jumpDistanceMultiplier = micVol;
     }
 }

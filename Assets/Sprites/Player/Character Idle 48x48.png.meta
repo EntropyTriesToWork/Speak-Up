@@ -237,7 +237,7 @@ TextureImporter:
       name: Character Idle 48x48_5
       rect:
         serializedVersion: 2
-        x: 249
+        x: 248
         y: 8
         width: 32
         height: 32
@@ -258,7 +258,7 @@ TextureImporter:
       name: Character Idle 48x48_6
       rect:
         serializedVersion: 2
-        x: 297
+        x: 296
         y: 8
         width: 32
         height: 32
@@ -269,8 +269,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 77c5323c4fba3e04cbaf8a3fba9da5c9
-      internalID: 1496042024
+      spriteID: b519cfe85d8ec5c4cb9ac881fae43910
+      internalID: -1050741431
       vertices: []
       indices: 
       edges: []
@@ -279,7 +279,7 @@ TextureImporter:
       name: Character Idle 48x48_7
       rect:
         serializedVersion: 2
-        x: 345
+        x: 344
         y: 8
         width: 32
         height: 32
@@ -290,8 +290,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 728dd4df681daf744a3a29ba73e35ebd
-      internalID: -1045941138
+      spriteID: abc016f945e7eaa4d91f3ad94f621606
+      internalID: 1029895587
       vertices: []
       indices: 
       edges: []
@@ -300,7 +300,7 @@ TextureImporter:
       name: Character Idle 48x48_8
       rect:
         serializedVersion: 2
-        x: 393
+        x: 392
         y: 8
         width: 32
         height: 32
@@ -311,8 +311,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fa154f3ffc4ef9445b4355cf4b625361
-      internalID: -1727070911
+      spriteID: b0b2a0a518848444ba33e60da8e0891b
+      internalID: 1511321843
       vertices: []
       indices: 
       edges: []
@@ -321,7 +321,7 @@ TextureImporter:
       name: Character Idle 48x48_9
       rect:
         serializedVersion: 2
-        x: 441
+        x: 440
         y: 8
         width: 32
         height: 32
@@ -332,8 +332,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7e041667e7f70274abbc379a9989ce94
-      internalID: -684836762
+      spriteID: 19b484c90d733b74b89bcdd76677f581
+      internalID: 44604252
       vertices: []
       indices: 
       edges: []
@@ -351,15 +351,14 @@ TextureImporter:
     nameFileIdTable:
       Character Idle 48x48_0: -1032337702
       Character Idle 48x48_1: 1445209665
-      Character Idle 48x48_10: 1981504569
       Character Idle 48x48_2: 735163410
       Character Idle 48x48_3: 425541444
       Character Idle 48x48_4: 12182696
       Character Idle 48x48_5: 1341346023
-      Character Idle 48x48_6: 1496042024
-      Character Idle 48x48_7: -1045941138
-      Character Idle 48x48_8: -1727070911
-      Character Idle 48x48_9: -684836762
+      Character Idle 48x48_6: -1050741431
+      Character Idle 48x48_7: 1029895587
+      Character Idle 48x48_8: 1511321843
+      Character Idle 48x48_9: 44604252
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
