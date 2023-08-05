@@ -9,6 +9,7 @@ public class HuatiPlayerController : MonoBehaviour
     public BoxCollider2D col;
     public LayerMask groundLayers;
     public SkeletonAnimation anim;
+    public AudioSource jumpSFX;
 
     public HuatiSettings settings;
     private bool _jumping;
@@ -16,7 +17,8 @@ public class HuatiPlayerController : MonoBehaviour
     public bool Grounded;
     public float timeSinceChargeStart = -1;
 
-    private float _jumpHeightMultiplier, _timeSinceGrounded;
+    public float jumpHeightMultiplier;
+    private float _timeSinceGrounded;
 
     private void FixedUpdate()
     {
@@ -31,39 +33,43 @@ public class HuatiPlayerController : MonoBehaviour
             Grounded = false;
             //anim.SetBool("Grounded", false); 
         }
-        float micVolume = HuatiGameManager.Instance.GetMicrophoneVolume();
+        float micVolume = HuatiGameManager.Instance.CurrentMicVolume;
 
         if(!Grounded && rb.velocity.y > 0 && _timeSinceGrounded - Time.realtimeSinceStartup < 1.5f) { rb.AddForce(settings.jumpForce * Vector2.up * micVolume); }
-        if (_jumping || !Grounded) { return; }
 
-        if (timeSinceChargeStart > 0f) { timeSinceChargeStart -= Time.fixedDeltaTime; return; }
-
-        if (micVolume > settings.jumpThreshhold) { ChargeJump(micVolume); }
-        else if (_jumpHeightMultiplier > 0f) { Jump(); }
+        if (timeSinceChargeStart > 0f) 
+        {
+            if (jumpHeightMultiplier < micVolume) { jumpHeightMultiplier = micVolume; }
+            HuatiGameManager.Instance.SetMicVolVisual(jumpHeightMultiplier, true, false);
+            timeSinceChargeStart -= Time.fixedDeltaTime;
+            return; 
+        }
+        HuatiGameManager.Instance.lockMicVolVisual = false;
+        
+        if (micVolume > settings.jumpThreshhold) { Jump(); }
     }
 
     void Jump()
     {
         if (!Grounded || _jumping) { return; }
-        rb.AddForce(Vector2.up * settings.jumpForce * (1f+_jumpHeightMultiplier), ForceMode2D.Impulse);
-        StartCoroutine(StaticJumpCooldown());
-        anim.AnimationState.SetAnimation(0, "jump", false);
 
+        StartCoroutine(StaticJumpCooldown());
+        
         IEnumerator StaticJumpCooldown()
         {
             _jumping = true;
-            yield return new WaitForSeconds(1.5f);
+            StartChargingJump();
+            HuatiGameManager.Instance.SetMicVolVisual(jumpHeightMultiplier, true);
+            yield return new WaitForSeconds(settings.minJumpTime);
+            rb.AddForce(Vector2.up * settings.jumpForce * (0.5f + jumpHeightMultiplier), ForceMode2D.Impulse);
+            anim.AnimationState.SetAnimation(0, "jump", false);
+            jumpSFX.volume = 0.5f + jumpHeightMultiplier;
+            jumpSFX.Play();
+            yield return new WaitForSeconds(1f);
             _jumping = false;
+            jumpHeightMultiplier = 0;
+            HuatiGameManager.Instance.SetMicVolVisual(jumpHeightMultiplier);
         }
-
-        Debug.Log(_jumpHeightMultiplier);
-
-        _jumpHeightMultiplier = 0;
-    }
-    void ChargeJump(float micVol)
-    {
-        if(timeSinceChargeStart <= 0) { StartChargingJump(); }
-        if(_jumpHeightMultiplier < micVol) { _jumpHeightMultiplier = micVol; }
     }
     void StartChargingJump()
     {

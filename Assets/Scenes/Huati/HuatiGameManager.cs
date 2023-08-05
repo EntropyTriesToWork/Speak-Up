@@ -11,7 +11,9 @@ public class HuatiGameManager : MonoBehaviour
     private AudioClip _micClip;
     public int sampleWindow;
     public Microphone mic;
-    public int sensitivity = 100;
+    public HuatiSettings settings;
+    public float micVolFillSpeed = 0.95f;
+    public Image volumeFill;
 
     public GameObject micOnImage, micOffImage;
 
@@ -19,16 +21,20 @@ public class HuatiGameManager : MonoBehaviour
 
     public bool micActivated;
 
+    public float CurrentMicVolume { get; private set; }
+    public int micSelection = 0;
+    public bool lockMicVolVisual = false;
+
     public void Awake()
     {
         if (Instance == null) { Instance = this; }
         else { Destroy(gameObject); }
+
+        if (Microphone.devices.Length <= 0) { Debug.LogError("No microphones detected!"); }
+        MicrophoneToAudioClip(micSelection);
     }
     private void Start()
     {
-        if (Microphone.devices.Length <= 0) { Debug.LogError("No microphones detected!"); }
-        MicrophoneToAudioClip();
-
         controlPanel.SetActive(false);
     }
 
@@ -41,24 +47,41 @@ public class HuatiGameManager : MonoBehaviour
             micOffImage.SetActive(!micActivated);
         }
         if (Input.GetKeyDown(KeyCode.Escape)) { ReloadScene(); }
+        if (Input.GetKeyDown(KeyCode.UpArrow)) { MicrophoneToAudioClip(micSelection++); }
+        else if (Input.GetKeyDown(KeyCode.DownArrow)) { MicrophoneToAudioClip(micSelection--); }
+
 
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             controlPanel.SetActive(!controlPanel.activeSelf);
         }
+
+        CurrentMicVolume = GetMicrophoneVolume();
+
+        if(CurrentMicVolume > 0f && !lockMicVolVisual) { SetMicVolVisual(CurrentMicVolume); }
+    }
+
+    public void SetMicVolVisual(float micVol, bool lockVisual = false, bool lerp = true)
+    {
+        if (lerp) { volumeFill.fillAmount = Mathf.Lerp(volumeFill.fillAmount, micVol, micVolFillSpeed); }
+        else { volumeFill.fillAmount = micVol; }
+        lockMicVolVisual = lockVisual;
     }
 
     public void ReloadScene()
     {
         SceneManager.LoadScene(0);
+        Time.timeScale = 1;
     }
 
-    public void MicrophoneToAudioClip()
+    public void MicrophoneToAudioClip(int micIndex)
     {
-        string micName = Microphone.devices[0];
+        Microphone.End(Microphone.devices[micSelection]);
+        string micName = Microphone.devices[micIndex];
         _micClip = Microphone.Start(micName, true, 20, AudioSettings.outputSampleRate);
         micActivated = true;
         micOffImage.SetActive(false);
+        Debug.Log(Microphone.devices[micIndex]);
     }
 
     public float GetMicrophoneVolume()
@@ -80,7 +103,7 @@ public class HuatiGameManager : MonoBehaviour
             if (waveData[i] > maxVol) { maxVol = waveData[i]; }
             meanVol += Mathf.Abs(waveData[i]);
         }
-        float intensity = (meanVol + maxVol) / 2f / sampleWindow * sensitivity;
+        float intensity = (meanVol + maxVol) / 2f / sampleWindow * settings.sensitivity;
         return intensity;
     }
 }

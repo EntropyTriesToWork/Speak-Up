@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Settings
   m_EditorClassIdentifier: 
   sensitivity: 1
-  jumpThreshhold: 0.1
+  jumpThreshhold: 0.05
   minJumpTime: 0.75
-  jumpForce: 15
+  jumpForce: 14.68751

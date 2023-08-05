@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
     {
         if(Microphone.devices.Length <= 0) { Debug.LogError("No microphones detected!"); }
         MicrophoneToAudioClip();
+
+        Time.timeScale = 1;
     }
 
     private void Update()
