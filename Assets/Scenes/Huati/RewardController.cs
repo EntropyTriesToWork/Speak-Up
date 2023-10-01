@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.Video;
 
 public class RewardController : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class RewardController : MonoBehaviour
 
     public AudioSource audioSource;
     public AudioClip bubbleSFX, revealRewardSFX;
+    public VideoPlayer videoPlayer;
 
     public void SwitchReward(Sprite sprite)
     {
@@ -60,7 +62,8 @@ public class RewardController : MonoBehaviour
             rewardPopupCanvas.DOFade(1f, 2f).SetUpdate(true);
             rewardSprite.DOFade(255f, 0.5f).SetDelay(1.5f).SetUpdate(true);
             rewardSprite.transform.DOScale(Vector3.one * 1.5f, 1f).SetDelay(1.5f).SetUpdate(true);
-            yield return new WaitForSecondsRealtime(3f);
+            yield return new WaitForSecondsRealtime(4f);
+            videoPlayer.Play();
         }
     }
     private void ResetRewardProgress()
